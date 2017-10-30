@@ -133,9 +133,30 @@ func (s *SmartContract) recordTuna(APIstub shim.ChaincodeStubInterface, args []s
 	}
 
 	var tuna = Tuna{ Vessel: args[1], Location: args[2], Timestamp: args[3], Holder: args[4] }
-	if args[4] == "milk" {
-		return shim.Error(fmt.Sprintf("Failed to record tuna catch"))
+	
+	startKey := "0"
+	endKey := "999"
+
+	resultsIterator, err1 := APIstub.GetStateByRange(startKey, endKey)
+	if err1 != nil {
+		return shim.Error(err1.Error())
 	}
+	defer resultsIterator.Close()
+
+	for resultsIterator.HasNext() {
+		queryResponse, err := resultsIterator.Next()
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+	
+		tunaNow := Tuna{}
+		json.Unmarshal(queryResponse.Value, &tunaNow)
+		if tunaNow.Holder == tuna.Holder {
+			return shim.Error(fmt.Sprintf("dup hodler!"))		
+		}
+	}
+
+
 	tunaAsBytes, _ := json.Marshal(tuna)
 	err := APIstub.PutState(args[0], tunaAsBytes)
 	if err != nil {
