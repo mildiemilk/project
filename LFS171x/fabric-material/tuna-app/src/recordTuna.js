@@ -88,7 +88,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
             isProposalGood = true;
             console.log('Transaction proposal was good');
         } else {
-            console.error('Transaction proposal was bad');
+            console.error('Transaction proposal was bad***');
         }
     if (isProposalGood) {
         console.log(util.format(
@@ -169,5 +169,5 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
         console.log('Transaction failed to be committed to the ledger due to ::'+results[1].event_status);
     }
 }).catch((err) => {
-    console.error('Failed to invoke successfully :: ' + err);
+    console.error('Failed to invoke successfully==>record :: ' + err);
 });

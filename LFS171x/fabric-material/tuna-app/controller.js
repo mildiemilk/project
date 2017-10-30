@@ -205,7 +205,8 @@ return{
 		                // now let the application know what happened
 		                var return_status = {event_status : code, tx_id : transaction_id_string};
 		                if (code !== 'VALID') {
-		                    console.error('The transaction was invalid, code = ' + code);
+							console.error('The transaction was invalid, code = ' + code);
+							res.send("Error: holder duplicate");
 		                    resolve(return_status); // we could use reject(new Error('Problem with the tranaction, event status ::'+code));
 		                } else {
 		                    console.log('The transaction has been committed on peer ' + event_hub._ep._endpoint.addr);
@@ -220,7 +221,8 @@ return{
 
 		        return Promise.all(promises);
 		    } else {
-		        console.error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
+				console.error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
+				res.send("Error: holder duplicate");
 		        throw new Error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
 		    }
 		}).then((results) => {
@@ -230,17 +232,18 @@ return{
 		        console.log('Successfully sent transaction to the orderer.');
 		        res.send(tx_id.getTransactionID());
 		    } else {
-		        console.error('Failed to order the transaction. Error code: ' + response.status);
+				console.error('Failed to order the transaction. Error code: ' + response.status);
 		    }
 
 		    if(results && results[1] && results[1].event_status === 'VALID') {
 		        console.log('Successfully committed the change to the ledger by the peer');
 		        res.send(tx_id.getTransactionID());
 		    } else {
-		        console.log('Transaction failed to be committed to the ledger due to ::'+results[1].event_status);
+				console.log('Transaction failed to be committed to the ledger due to ::'+results[1].event_status);
 		    }
 		}).catch((err) => {
-		    console.error('Failed to invoke successfully :: ' + err);
+			console.error('Failed to invoke successfully-->add :: ' + err);
+			res.send("Error: holder duplicate");
 		});
 	},
 	get_tuna: function(req, res){
@@ -381,7 +384,7 @@ return{
 		            isProposalGood = true;
 		            console.log('Transaction proposal was good');
 		        } else {
-		            console.error('Transaction proposal was bad');
+		            console.error('Transaction proposal was bad++++');
 		        }
 		    if (isProposalGood) {
 		        console.log(util.format(
@@ -464,7 +467,7 @@ return{
 		        console.log('Transaction failed to be committed to the ledger due to ::'+results[1].event_status);
 		    }
 		}).catch((err) => {
-		    console.error('Failed to invoke successfully :: ' + err);
+		    console.error('Failed to invoke successfully-->change :: ' + err);
 		    res.send("Error: no tuna catch found");
 		});
 

@@ -9,6 +9,7 @@ app.controller('appController', function($scope, appFactory){
 
 	$("#success_holder").hide();
 	$("#success_create").hide();
+	$("#error_create").hide();
 	$("#error_holder").hide();
 	$("#error_query").hide();
 	
@@ -48,7 +49,13 @@ app.controller('appController', function($scope, appFactory){
 
 		appFactory.recordTuna($scope.tuna, function(data){
 			$scope.create_tuna = data;
-			$("#success_create").show();
+			if ($scope.create_tuna == "Error: holder duplicate"){
+				$("#error_create").show();
+				$("#success_create").hide();
+			} else{
+				$("#success_create").show();
+				$("#error_create").hide();
+			}
 		});
 	}
 

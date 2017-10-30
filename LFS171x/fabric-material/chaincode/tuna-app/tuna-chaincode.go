@@ -111,10 +111,10 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 
 	i := 0
 	for i < len(tuna) {
-		fmt.Println("i is ", i)
+		fmt.Println("i isp ", i)
 		tunaAsBytes, _ := json.Marshal(tuna[i])
 		APIstub.PutState(strconv.Itoa(i+1), tunaAsBytes)
-		fmt.Println("Added", tuna[i])
+		fmt.Println("Addedsss", tuna[i])
 		i = i + 1
 	}
 
@@ -133,7 +133,9 @@ func (s *SmartContract) recordTuna(APIstub shim.ChaincodeStubInterface, args []s
 	}
 
 	var tuna = Tuna{ Vessel: args[1], Location: args[2], Timestamp: args[3], Holder: args[4] }
-
+	if args[4] == "milk" {
+		return shim.Error(fmt.Sprintf("Failed to record tuna catch"))
+	}
 	tunaAsBytes, _ := json.Marshal(tuna)
 	err := APIstub.PutState(args[0], tunaAsBytes)
 	if err != nil {
