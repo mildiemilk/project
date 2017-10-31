@@ -141,8 +141,31 @@ func (s *SmartContract) recordTuna(APIstub shim.ChaincodeStubInterface, args []s
 		return shim.Error("Incorrect number of arguments. Expecting 5 ==> ")
 	}
 
-	var tuna = Tuna{ Name: args[1],Hospital: args[2], ICD10: args[3], DateClaim: args[4], Price: args[5], Time: args[6] }
-	fmt.Printf("-tuna==>> BC %+v", tuna)
+var tuna = Tuna{ Name: args[1],Hospital: args[2], ICD10: args[3], DateClaim: args[4], Price: args[5], Time: args[6] }
+	
+	startKey := "0"
+	endKey := "999"
+
+	resultsIterator, err1 := APIstub.GetStateByRange(startKey, endKey)
+	if err1 != nil {
+		return shim.Error(err1.Error())
+	}
+	defer resultsIterator.Close()
+
+	for resultsIterator.HasNext() {
+		queryResponse, err := resultsIterator.Next()
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+	
+		tunaNow := Tuna{}
+		json.Unmarshal(queryResponse.Value, &tunaNow)
+		if tunaNow.Holder == tuna.Holder {
+			return shim.Error(fmt.Sprintf("dup hodler!"))		
+		}
+	}
+
+
 	tunaAsBytes, _ := json.Marshal(tuna)
 	err := APIstub.PutState(args[0], tunaAsBytes)
 	if err != nil {
