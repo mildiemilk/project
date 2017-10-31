@@ -32,10 +32,12 @@ type SmartContract struct {
 Structure tags are used by encoding/json library
 */
 type Tuna struct {
-	Vessel string `json:"vessel"`
-	Timestamp string `json:"timestamp"`
-	Location  string `json:"location"`
-	Holder  string `json:"holder"`
+	Hospital string `json:"hospital"`
+	Time string `json:"time"`
+	DateClaim string `json:"dateclaim"`
+	Name string `json:"name"`
+	ICD10  string `json:"icd10"`
+	Price  string `json:"price"`
 }
 
 /*
@@ -67,7 +69,7 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	} else if function == "queryAllTuna" {
 		return s.queryAllTuna(APIstub)
 	} else if function == "changeTunaHolder" {
-		return s.changeTunaHolder(APIstub, args)
+		// return s.changeTunaHolder(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -97,24 +99,24 @@ Will add test data (10 tuna catches)to our network
  */
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	tuna := []Tuna{
-		Tuna{Vessel: "923F", Location: "67.0006, -70.5476", Timestamp: "1504054225", Holder: "Miriam"},
-		Tuna{Vessel: "M83T", Location: "91.2395, -49.4594", Timestamp: "1504057825", Holder: "Dave"},
-		Tuna{Vessel: "T012", Location: "58.0148, 59.01391", Timestamp: "1493517025", Holder: "Igor"},
-		Tuna{Vessel: "P490", Location: "-45.0945, 0.7949", Timestamp: "1496105425", Holder: "Amalea"},
-		Tuna{Vessel: "S439", Location: "-107.6043, 19.5003", Timestamp: "1493512301", Holder: "Rafa"},
-		Tuna{Vessel: "J205", Location: "-155.2304, -15.8723", Timestamp: "1494117101", Holder: "Shen"},
-		Tuna{Vessel: "S22L", Location: "103.8842, 22.1277", Timestamp: "1496104301", Holder: "Leila"},
-		Tuna{Vessel: "EI89", Location: "-132.3207, -34.0983", Timestamp: "1485066691", Holder: "Yuan"},
-		Tuna{Vessel: "129R", Location: "153.0054, 12.6429", Timestamp: "1485153091", Holder: "Carlo"},
-		Tuna{Vessel: "49W4", Location: "51.9435, 8.2735", Timestamp: "1487745091", Holder: "Fatima"},
+		Tuna{Hospital: "923F",DateClaim: "11/2/2560",Time: "15:30", Name: "milk", ICD10: "1504054225", Price: "Miriam"},
+		Tuna{Hospital: "M83T",DateClaim: "11/2/2560",Time: "15:30", Name: "eiei", ICD10: "1504057825", Price: "Dave"},
+		Tuna{Hospital: "T012",DateClaim: "11/2/2560",Time: "15:30", Name: "donut", ICD10: "1493517025", Price: "Igor"},
+		Tuna{Hospital: "P490",DateClaim: "11/2/2560",Time: "15:30", Name: "polar", ICD10: "1496105425", Price: "Amalea"},
+		Tuna{Hospital: "S439",DateClaim: "11/2/2560",Time: "15:30", Name: "bear", ICD10: "1493512301", Price: "Rafa"},
+		Tuna{Hospital: "J205",DateClaim: "11/2/2560",Time: "15:30", Name: "kiku", ICD10: "1494117101", Price: "Shen"},
+		Tuna{Hospital: "S22L",DateClaim: "11/2/2560",Time: "15:30", Name: "mumi", ICD10: "1496104301", Price: "Leila"},
+		Tuna{Hospital: "EI89",DateClaim: "11/2/2560",Time: "15:30", Name: "bottle", ICD10: "1485066691", Price: "Yuan"},
+		Tuna{Hospital: "129R",DateClaim: "11/2/2560",Time: "15:30", Name: "macair", ICD10: "1485153091", Price: "Carlo"},
+		Tuna{Hospital: "49W4",DateClaim: "11/2/2560",Time: "15:30", Name: "Charger", ICD10: "1487745091", Price: "Fatima"},
 	}
 
 	i := 0
 	for i < len(tuna) {
-		fmt.Println("i isp ", i)
+		fmt.Println("i is ", i)
 		tunaAsBytes, _ := json.Marshal(tuna[i])
 		APIstub.PutState(strconv.Itoa(i+1), tunaAsBytes)
-		fmt.Println("Addedsss", tuna[i])
+		fmt.Println("Added", tuna[i])
 		i = i + 1
 	}
 
@@ -127,15 +129,20 @@ Fisherman like Sarah would use to record each of her tuna catches.
 This method takes in five arguments (attributes to be saved in the ledger). 
  */
 func (s *SmartContract) recordTuna(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-
-	if len(args) != 5 {
-		return shim.Error("Incorrect number of arguments. Expecting 5")
+	fmt.Printf("-lenn Argument ==> Bc %d", len(args))
+	fmt.Println("-Argument ==> Bc[0] %s", args[0])
+	fmt.Println("-Argument ==> Bc[1] %s", args[1])
+	fmt.Println("-Argument ==> Bc[2] %s", args[2])
+	fmt.Println("-Argument ==> Bc[3] %s", args[3])
+	fmt.Println("-Argument ==> Bc[4] %s", args[4])
+	fmt.Println("-Argument ==> Bc[5] %s", args[5])
+	fmt.Println("-Argument ==> Bc[6] %s", args[6])
+	if len(args) != 7 {
+		return shim.Error("Incorrect number of arguments. Expecting 5 ==> ")
 	}
 
-	var tuna = Tuna{ Vessel: args[1], Location: args[2], Timestamp: args[3], Holder: args[4] }
-	if args[4] == "milk" {
-		return shim.Error(fmt.Sprintf("Failed to record tuna catch"))
-	}
+	var tuna = Tuna{ Name: args[1],Hospital: args[2], ICD10: args[3], DateClaim: args[4], Price: args[5], Time: args[6] }
+	fmt.Printf("-tuna==>> BC %+v", tuna)
 	tunaAsBytes, _ := json.Marshal(tuna)
 	err := APIstub.PutState(args[0], tunaAsBytes)
 	if err != nil {
@@ -198,31 +205,31 @@ func (s *SmartContract) queryAllTuna(APIstub shim.ChaincodeStubInterface) sc.Res
 The data in the world state can be updated with who has possession. 
 This function takes in 2 arguments, tuna id and new holder name. 
  */
-func (s *SmartContract) changeTunaHolder(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+// func (s *SmartContract) changeTunaHolder(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
-	}
+// 	if len(args) != 2 {
+// 		return shim.Error("Incorrect number of arguments. Expecting 2")
+// 	}
 
-	tunaAsBytes, _ := APIstub.GetState(args[0])
-	if tunaAsBytes == nil {
-		return shim.Error("Could not locate tuna")
-	}
-	tuna := Tuna{}
+// 	tunaAsBytes, _ := APIstub.GetState(args[0])
+// 	if tunaAsBytes == nil {
+// 		return shim.Error("Could not locate tuna")
+// 	}
+// 	tuna := Tuna{}
 
-	json.Unmarshal(tunaAsBytes, &tuna)
-	// Normally check that the specified argument is a valid holder of tuna
-	// we are skipping this check for this example
-	tuna.Holder = args[1]
+// 	json.Unmarshal(tunaAsBytes, &tuna)
+// 	// Normally check that the specified argument is a valid holder of tuna
+// 	// we are skipping this check for this example
+// 	tuna.price = args[1]
 
-	tunaAsBytes, _ = json.Marshal(tuna)
-	err := APIstub.PutState(args[0], tunaAsBytes)
-	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to change tuna holder: %s", args[0]))
-	}
+// 	tunaAsBytes, _ = json.Marshal(tuna)
+// 	err := APIstub.PutState(args[0], tunaAsBytes)
+// 	if err != nil {
+// 		return shim.Error(fmt.Sprintf("Failed to change tuna holder: %s", args[0]))
+// 	}
 
-	return shim.Success(nil)
-}
+// 	return shim.Success(nil)
+// }
 
 /*
  * main function *
