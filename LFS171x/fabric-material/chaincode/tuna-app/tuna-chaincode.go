@@ -160,8 +160,10 @@ var tuna = Tuna{ Name: args[1],Hospital: args[2], ICD10: args[3], DateClaim: arg
 	
 		tunaNow := Tuna{}
 		json.Unmarshal(queryResponse.Value, &tunaNow)
-		if tunaNow.Holder == tuna.Holder {
-			return shim.Error(fmt.Sprintf("dup hodler!"))		
+		if tunaNow.Name == tuna.Name && tunaNow.Hospital == tuna.Hospital && 
+			tunaNow.ICD10 == tuna.ICD10 && tunaNow.DateClaim == tuna.DateClaim && 
+			tunaNow.Price == tuna.Price && tunaNow.Time == tuna.Time {
+			return shim.Error(fmt.Sprintf("dup claim!"))		
 		}
 	}
 
