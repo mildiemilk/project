@@ -131,18 +131,19 @@ This method takes in five arguments (attributes to be saved in the ledger).
  */
 func (s *SmartContract) recordTuna(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	fmt.Printf("-lenn Argument ==> Bc %d", len(args))
-	fmt.Println("-Argument ==> Bc[0] %s", args[0])
+	fmt.Println("-Argument ==> Bc[8] %s", args[7])
 	fmt.Println("-Argument ==> Bc[1] %s", args[1])
 	fmt.Println("-Argument ==> Bc[2] %s", args[2])
 	fmt.Println("-Argument ==> Bc[3] %s", args[3])
 	fmt.Println("-Argument ==> Bc[4] %s", args[4])
 	fmt.Println("-Argument ==> Bc[5] %s", args[5])
 	fmt.Println("-Argument ==> Bc[6] %s", args[6])
-	if len(args) != 7 {
-		return shim.Error("Incorrect number of arguments. Expecting 5 ==> ")
+	fmt.Println("-Argument ==> Bc[7] %s", args[0])
+	if len(args) != 8 {
+		return shim.Error("Incorrect number of arguments. Expecting 7 ==> ")
 	}
 
-var tuna = Tuna{ Name: args[1],Hospital: args[2], ICD10: args[3], DateClaim: args[4], Price: args[5], Time: args[6] }
+var tuna = Tuna{ Name: args[1],Hospital: args[2], ICD10: args[3], DateClaim: args[4], Price: args[5], Time: args[6], Status: args[7] }
 	
 	startKey := "0"
 	endKey := "999"

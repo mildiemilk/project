@@ -96,7 +96,7 @@ return{
 		var DateClaim = array[4]
 		var Price = array[5]
 		var Time = array[6]
-		// var isApprove = false
+		var Status = "false"
 		var fabric_client = new Fabric_Client();
 
 		// setup the fabric network
@@ -143,7 +143,7 @@ return{
 		        //targets : --- letting this default to the peers assigned to the channel
 		        chaincodeId: 'tuna-app',
 		        fcn: 'recordTuna',
-		        args: [Key,Name,Hospital,ICD10,DateClaim,Price,Time],
+		        args: [Key,Name,Hospital,ICD10,DateClaim,Price,Time, Status],
 		        chainId: 'mychannel',
 		        txId: tx_id
 		    };
