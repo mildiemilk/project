@@ -222,6 +222,32 @@ func (s *SmartContract) queryAllTuna(APIstub shim.ChaincodeStubInterface) sc.Res
 
 	fmt.Printf("- queryAllTuna:\n%s\n", buffer.String())
 
+	//-------------------------------------------------------------------
+
+	var history []Tuna;
+	marble := Tuna{}
+
+	// Get History
+	resultsIterator1, err1 := APIstub.GetHistoryForKey("1")
+	if err1 != nil {
+		return shim.Error(err1.Error())
+	}
+	defer resultsIterator1.Close()
+
+	for resultsIterator1.HasNext() {
+		historyData, err := resultsIterator1.Next()
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+		json.Unmarshal(historyData.Value, &marble)     //un stringify it aka JSON.parse()
+		fmt.Println("- history:%+v", marble)
+		fmt.Println("- historyData:%+v", historyData)
+		history = append(history, marble)              //add this marble to the list
+	}
+	fmt.Printf("- getHistoryForMarble returning:\n%s", history)
+	//-------------------------------------------------------------------
+
 	return shim.Success(buffer.Bytes())
 }
 
