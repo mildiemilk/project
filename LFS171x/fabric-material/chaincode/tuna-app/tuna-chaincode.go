@@ -144,27 +144,29 @@ func (s *SmartContract) recordTuna(APIstub shim.ChaincodeStubInterface, args []s
 
 var tuna = Tuna{ Name: args[1],Hospital: args[2], ICD10: args[3], DateClaim: args[4], Price: args[5], Time: args[6] }
 	
-	// startKey := "0"
-	// endKey := "999"
+	startKey := "0"
+	endKey := "999"
 
-	// resultsIterator, err1 := APIstub.GetStateByRange(startKey, endKey)
-	// if err1 != nil {
-	// 	return shim.Error(err1.Error())
-	// }
-	// defer resultsIterator.Close()
+	resultsIterator, err1 := APIstub.GetStateByRange(startKey, endKey)
+	if err1 != nil {
+		return shim.Error(err1.Error())
+	}
+	defer resultsIterator.Close()
 
-	// for resultsIterator.HasNext() {
-	// 	queryResponse, err := resultsIterator.Next()
-	// 	if err != nil {
-	// 		return shim.Error(err.Error())
-	// 	}
+	for resultsIterator.HasNext() {
+		queryResponse, err := resultsIterator.Next()
+		if err != nil {
+			return shim.Error(err.Error())
+		}
 	
-	// 	tunaNow := Tuna{}
-	// 	json.Unmarshal(queryResponse.Value, &tunaNow)
-	// 	if tunaNow.Holder == tuna.Holder {
-	// 		return shim.Error(fmt.Sprintf("dup hodler!"))		
-	// 	}
-	// }
+		tunaNow := Tuna{}
+		json.Unmarshal(queryResponse.Value, &tunaNow)
+		if tunaNow.Name == tuna.Name && tunaNow.Hospital == tuna.Hospital && 
+			tunaNow.ICD10 == tuna.ICD10 && tunaNow.DateClaim == tuna.DateClaim && 
+			tunaNow.Price == tuna.Price && tunaNow.Time == tuna.Time {
+			return shim.Error(fmt.Sprintf("dup claim!"))		
+		}
+	}
 
 
 	tunaAsBytes, _ := json.Marshal(tuna)
