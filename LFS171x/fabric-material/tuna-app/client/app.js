@@ -63,7 +63,7 @@ app.controller('appController', function($scope, appFactory){
 
 		appFactory.changeHolder($scope.holder, function(data){
 			$scope.change_holder = data;
-			if ($scope.change_holder == "Error: no tuna catch found"){
+			if ($scope.change_holder == "Error: Duplicate"){
 				$("#error_holder").show();
 				$("#success_holder").hide();
 			} else{
@@ -104,14 +104,14 @@ app.factory('appFactory', function($http){
 		});
 	}
 
-	// factory.changeHolder = function(data, callback){
+	factory.changeHolder = function(data, callback){
 
-	// 	var holder = data.id + "-" + data.name;
+		var holder = data.id + "-" + data.status;
 
-  //   	$http.get('/change_holder/'+holder).success(function(output){
-	// 		callback(output)
-	// 	});
-	// }
+    	$http.get('/change_holder/'+holder).success(function(output){
+			callback(output)
+		});
+	}
 
 	return factory;
 });

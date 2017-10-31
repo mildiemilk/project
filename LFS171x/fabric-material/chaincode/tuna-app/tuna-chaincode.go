@@ -38,6 +38,7 @@ type Tuna struct {
 	Name string `json:"name"`
 	ICD10  string `json:"icd10"`
 	Price  string `json:"price"`
+	Status string `json:"status"`
 }
 
 /*
@@ -69,7 +70,7 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	} else if function == "queryAllTuna" {
 		return s.queryAllTuna(APIstub)
 	} else if function == "changeTunaHolder" {
-		// return s.changeTunaHolder(APIstub, args)
+		return s.changeTunaHolder(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -99,16 +100,16 @@ Will add test data (10 tuna catches)to our network
  */
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	tuna := []Tuna{
-		Tuna{Hospital: "923F",DateClaim: "11/2/2560",Time: "15:30", Name: "milk", ICD10: "1504054225", Price: "Miriam"},
-		Tuna{Hospital: "M83T",DateClaim: "11/2/2560",Time: "15:30", Name: "eiei", ICD10: "1504057825", Price: "Dave"},
-		Tuna{Hospital: "T012",DateClaim: "11/2/2560",Time: "15:30", Name: "donut", ICD10: "1493517025", Price: "Igor"},
-		Tuna{Hospital: "P490",DateClaim: "11/2/2560",Time: "15:30", Name: "polar", ICD10: "1496105425", Price: "Amalea"},
-		Tuna{Hospital: "S439",DateClaim: "11/2/2560",Time: "15:30", Name: "bear", ICD10: "1493512301", Price: "Rafa"},
-		Tuna{Hospital: "J205",DateClaim: "11/2/2560",Time: "15:30", Name: "kiku", ICD10: "1494117101", Price: "Shen"},
-		Tuna{Hospital: "S22L",DateClaim: "11/2/2560",Time: "15:30", Name: "mumi", ICD10: "1496104301", Price: "Leila"},
-		Tuna{Hospital: "EI89",DateClaim: "11/2/2560",Time: "15:30", Name: "bottle", ICD10: "1485066691", Price: "Yuan"},
-		Tuna{Hospital: "129R",DateClaim: "11/2/2560",Time: "15:30", Name: "macair", ICD10: "1485153091", Price: "Carlo"},
-		Tuna{Hospital: "49W4",DateClaim: "11/2/2560",Time: "15:30", Name: "Charger", ICD10: "1487745091", Price: "Fatima"},
+		Tuna{Hospital: "923F",DateClaim: "11/2/2560",Time: "15:30", Name: "milk", ICD10: "1504054225", Price: "Miriam", Status:"true"},
+		Tuna{Hospital: "M83T",DateClaim: "11/2/2560",Time: "15:30", Name: "eiei", ICD10: "1504057825", Price: "Dave", Status:"true"},
+		Tuna{Hospital: "T012",DateClaim: "11/2/2560",Time: "15:30", Name: "donut", ICD10: "1493517025", Price: "Igor", Status:"true"},
+		Tuna{Hospital: "P490",DateClaim: "11/2/2560",Time: "15:30", Name: "polar", ICD10: "1496105425", Price: "Amalea", Status:"true"},
+		Tuna{Hospital: "S439",DateClaim: "11/2/2560",Time: "15:30", Name: "bear", ICD10: "1493512301", Price: "Rafa", Status:"true"},
+		Tuna{Hospital: "J205",DateClaim: "11/2/2560",Time: "15:30", Name: "kiku", ICD10: "1494117101", Price: "Shen", Status:"true"},
+		Tuna{Hospital: "S22L",DateClaim: "11/2/2560",Time: "15:30", Name: "mumi", ICD10: "1496104301", Price: "Leila", Status:"true"},
+		Tuna{Hospital: "EI89",DateClaim: "11/2/2560",Time: "15:30", Name: "bottle", ICD10: "1485066691", Price: "Yuan", Status:"true"},
+		Tuna{Hospital: "129R",DateClaim: "11/2/2560",Time: "15:30", Name: "macair", ICD10: "1485153091", Price: "Carlo", Status:"true"},
+		Tuna{Hospital: "49W4",DateClaim: "11/2/2560",Time: "15:30", Name: "Charger", ICD10: "1487745091", Price: "Fatima", Status:"true"},
 	}
 
 	i := 0
@@ -143,27 +144,27 @@ func (s *SmartContract) recordTuna(APIstub shim.ChaincodeStubInterface, args []s
 
 var tuna = Tuna{ Name: args[1],Hospital: args[2], ICD10: args[3], DateClaim: args[4], Price: args[5], Time: args[6] }
 	
-	startKey := "0"
-	endKey := "999"
+	// startKey := "0"
+	// endKey := "999"
 
-	resultsIterator, err1 := APIstub.GetStateByRange(startKey, endKey)
-	if err1 != nil {
-		return shim.Error(err1.Error())
-	}
-	defer resultsIterator.Close()
+	// resultsIterator, err1 := APIstub.GetStateByRange(startKey, endKey)
+	// if err1 != nil {
+	// 	return shim.Error(err1.Error())
+	// }
+	// defer resultsIterator.Close()
 
-	for resultsIterator.HasNext() {
-		queryResponse, err := resultsIterator.Next()
-		if err != nil {
-			return shim.Error(err.Error())
-		}
+	// for resultsIterator.HasNext() {
+	// 	queryResponse, err := resultsIterator.Next()
+	// 	if err != nil {
+	// 		return shim.Error(err.Error())
+	// 	}
 	
-		tunaNow := Tuna{}
-		json.Unmarshal(queryResponse.Value, &tunaNow)
-		if tunaNow.Holder == tuna.Holder {
-			return shim.Error(fmt.Sprintf("dup hodler!"))		
-		}
-	}
+	// 	tunaNow := Tuna{}
+	// 	json.Unmarshal(queryResponse.Value, &tunaNow)
+	// 	if tunaNow.Holder == tuna.Holder {
+	// 		return shim.Error(fmt.Sprintf("dup hodler!"))		
+	// 	}
+	// }
 
 
 	tunaAsBytes, _ := json.Marshal(tuna)
@@ -228,31 +229,32 @@ func (s *SmartContract) queryAllTuna(APIstub shim.ChaincodeStubInterface) sc.Res
 The data in the world state can be updated with who has possession. 
 This function takes in 2 arguments, tuna id and new holder name. 
  */
-// func (s *SmartContract) changeTunaHolder(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) changeTunaHolder(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	fmt.Println("-ChangeTuna ==> Bc[0] %s", args[0])
+	fmt.Println("-Change ==> Bc[1] %s", args[1])
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
 
-// 	if len(args) != 2 {
-// 		return shim.Error("Incorrect number of arguments. Expecting 2")
-// 	}
+	tunaAsBytes, _ := APIstub.GetState(args[0])
+	if tunaAsBytes == nil {
+		return shim.Error("Could not locate tuna")
+	}
+	tuna := Tuna{}
 
-// 	tunaAsBytes, _ := APIstub.GetState(args[0])
-// 	if tunaAsBytes == nil {
-// 		return shim.Error("Could not locate tuna")
-// 	}
-// 	tuna := Tuna{}
+	json.Unmarshal(tunaAsBytes, &tuna)
+	// Normally check that the specified argument is a valid holder of tuna
+	// we are skipping this check for this example
+	tuna.Status = args[1]
+	fmt.Println("-ChangeStatus ==> Bc[1] %s", tuna.Status)
+	tunaAsBytes, _ = json.Marshal(tuna)
+	err := APIstub.PutState(args[0], tunaAsBytes)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to change tuna holder: %s", args[0]))
+	}
 
-// 	json.Unmarshal(tunaAsBytes, &tuna)
-// 	// Normally check that the specified argument is a valid holder of tuna
-// 	// we are skipping this check for this example
-// 	tuna.price = args[1]
-
-// 	tunaAsBytes, _ = json.Marshal(tuna)
-// 	err := APIstub.PutState(args[0], tunaAsBytes)
-// 	if err != nil {
-// 		return shim.Error(fmt.Sprintf("Failed to change tuna holder: %s", args[0]))
-// 	}
-
-// 	return shim.Success(nil)
-// }
+	return shim.Success(nil)
+}
 
 /*
  * main function *
