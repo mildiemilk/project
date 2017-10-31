@@ -31,9 +31,9 @@ app.controller('appController', function($scope, appFactory){
 
 	$scope.queryTuna = function(){
 
-		var id = $scope.tuna_id;
+		var name = $scope.tuna_name;
 
-		appFactory.queryTuna(id, function(data){
+		appFactory.queryTuna(name, function(data){
 			$scope.query_tuna = data;
 
 			if ($scope.query_tuna == "Could not locate tuna"){
@@ -46,7 +46,7 @@ app.controller('appController', function($scope, appFactory){
 	}
 
 	$scope.recordTuna = function(){
-
+		console.log('tunaScope==>');
 		appFactory.recordTuna($scope.tuna, function(data){
 			$scope.create_tuna = data;
 			if ($scope.create_tuna == "Error: holder duplicate"){
@@ -87,31 +87,31 @@ app.factory('appFactory', function($http){
 		});
 	}
 
-	factory.queryTuna = function(id, callback){
-    	$http.get('/get_tuna/'+id).success(function(output){
+	factory.queryTuna = function(name, callback){
+    	$http.get('/get_tuna/'+name).success(function(output){
 			callback(output)
 		});
 	}
 
 	factory.recordTuna = function(data, callback){
 
-		data.location = data.longitude + ", "+ data.latitude;
-
-		var tuna = data.id + "-" + data.location + "-" + data.timestamp + "-" + data.holder + "-" + data.vessel;
-
+		// data.location = data.longitude + ", "+ data.latitude;
+		console.log('recordTuna'+ data);
+		var tuna = data.id+"-"+data.name + "-" + data.hospital + "-" + data.icd10 + "-" + data.dateclaim + "-" + data.price + "-" + data.time;
+		console.log('Tuna'+ tuna);
     	$http.get('/add_tuna/'+tuna).success(function(output){
 			callback(output)
 		});
 	}
 
-	factory.changeHolder = function(data, callback){
+	// factory.changeHolder = function(data, callback){
 
-		var holder = data.id + "-" + data.name;
+	// 	var holder = data.id + "-" + data.name;
 
-    	$http.get('/change_holder/'+holder).success(function(output){
-			callback(output)
-		});
-	}
+  //   	$http.get('/change_holder/'+holder).success(function(output){
+	// 		callback(output)
+	// 	});
+	// }
 
 	return factory;
 });

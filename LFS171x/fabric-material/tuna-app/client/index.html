@@ -76,19 +76,19 @@
       <table id="all_tuna" class="table" align="center">
 
         <tr>
-          <th>ID</th>
-          <th>Timestamp</th>
-          <th>Holder</th>
-          <th>Catch Location <br>(Longitude, Latitude)</th>
-          <th>Vessel</th>
+          <th>Hospital</th>
+          <th>Time</th>
+          <th>Name</th>
+          <th>ICD10</th>
+          <th>price</th>
         </tr>
 
         <tr ng-repeat="tuna in all_tuna">
-          <td>{{tuna.Key}}</td>
-          <td>{{tuna.timestamp}}</td>
-          <td>{{tuna.holder}}</td>
-          <td>{{tuna.location}}</td>
-          <td>{{tuna.vessel}}</td>
+          <td>{{tuna.hospital}}</td>
+          <td>{{tuna.time}}</td>
+          <td>{{tuna.name}}</td>
+          <td>{{tuna.icd10}}</td>
+          <td>{{tuna.price}}</td>
         </tr>
       </table>
 
@@ -96,49 +96,50 @@
         <label>Query a Specific Tuna Catch</label><br>
         <h5 style="color:red;margin-bottom:2%" id="error_query">Error: Please enter a valid Tuna Id</h5>
         
-        Enter a catch number: <input id="createName" class="form-control" type="text" placeholder="Ex: 3" ng-model="tuna_id">
+        Enter a name: <input id="createName" class="form-control" type="text" placeholder="name" ng-model="tuna_name">
         <input id="querySubmit" type="submit" value="Query" class="btn btn-primary" ng-click="queryTuna()">
       </div>
 
       <table id="query_tuna" class="table" align="center">
 
         <tr>
-          <th>Timestamp</th>
-          <th>Holder</th>
-          <th>Catch Location <br>(Longitude, Latitude)</th>
-          <th>Vessel</th>
+          <th>Time</th>
+          <th>Name</th>
+          <th>Hospital</th>
+          <th>ICD10</th>
         </tr>
 
         <tr>
-          <td>{{query_tuna.timestamp}}</td>
-          <td>{{query_tuna.holder}}</td>
-          <td>{{query_tuna.location}}</td>
-          <td>{{query_tuna.vessel}}</td>
+          <td>{{query_tuna.time}}</td>
+          <td>{{query_tuna.name}}</td>
+          <td>{{query_tuna.hospital}}</td>
+          <td>{{query_tuna.icd10}}</td>
         </tr>
       </table>
 
       <div class="form-group">
-        <label>Create Tuna Record</label>
+        <label>Create Claim Record</label>
         <h5 style="color:green;margin-bottom:2%" id="success_create">Success! Tx ID: {{create_tuna}}</h5>
-        <h5 style="color:red;margin-bottom:2%" id="error_create">Error! holder duplicate</h5>
+        <h5 style="color:red;margin-bottom:2%" id="error_create">Error! duplicate Claim</h5>
         <br>
-        Enter catch id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="tuna.id">
-        Enter name of vessel: <input class="form-control" type="text" placeholder="Ex: 0239L" ng-model="tuna.vessel">
-        Enter longitude: <input id="createName" class="form-control" type="text" placeholder="Ex: 28.012" ng-model="tuna.longitude"> 
-        Enter latitude: <input id="createName" class="form-control" type="text" placeholder="Ex: 150.405" ng-model="tuna.latitude">
-        Enter timestamp: <input class="form-control" type="text" placeholder="Ex: 4982342301" ng-model="tuna.timestamp">
-        Enter name of holder: <input class="form-control" type="text" placeholder="Ex: Hansel" ng-model="tuna.holder">
+        Enter ID: <input class="form-control" type="text" placeholder="name" ng-model="tuna.id">
+        Enter Name: <input class="form-control" type="text" placeholder="name" ng-model="tuna.name">
+        Enter Hospital: <input class="form-control" type="text" placeholder="Thonburi" ng-model="tuna.hospital">
+        Enter ICD10: <input id="createName" class="form-control" type="text" placeholder="A050" ng-model="tuna.icd10"> 
+        Enter date: <input id="createName" class="form-control" type="text" placeholder="11/11/11" ng-model="tuna.dateclaim">
+        Enter price: <input class="form-control" type="text" placeholder="3000" ng-model="tuna.price">
+        Enter time: <input class="form-control" type="text" placeholder="15.30" ng-model="tuna.time">
         <input id="createSubmit" type="submit" value="Create" class="btn btn-primary" ng-click="recordTuna()"> 
       </div>
 
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label>Change Tuna Holder</label><br>
         <h5 style="color:green;margin-bottom:2%" id="success_holder">Success! Tx ID: {{change_holder}}</h5>
         <h5 style="color:red;margin-bottom:2%" id="error_holder">Error: Please enter a valid Tuna Id</h5>
-        Enter a catch id between 1 and 10: <input class="form-control" name="assetSelect" placeholder="Ex: 1" ng-model="holder.id">
+        Enter a catch id between 1 and 10: <input class="form-control" name="assetSelect" placeholder="Ex: 1" ng-model="holder.name">
         Enter name of new holder: <input class="form-control" name="assetSelect" placeholder="Ex: Barry" ng-model="holder.name">
         <input id="transferSubmit" type="submit" value="Change" class="btn btn-primary" ng-click="changeHolder()">
-      </div>
+      </div> -->
 
     </div>
   </body>
